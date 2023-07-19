@@ -1,0 +1,38 @@
+<%- include('../Partials/Header.ejs') %>
+    <%- include('../Partials/Navbar.ejs') %>
+
+        <div class="container">
+            <h2>Edit User</h2>
+            <form action="/admin/edit/<%= data.id %>" method="POST">
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name"
+                        value="<%= data.first_name %>">
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name"
+                        value="<%= data.last_name %>">
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" value="<%= data.username %>">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<%= data.email %>">
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-select" id="role" name="role_id">
+                        <option value="user" <%=data.role_id==='user' ? 'selected' : '' %>>User</option>
+                        <option value="admin" <%=data.role_id==='admin' ? 'selected' : '' %>>Admin</option>
+                    </select>
+                </div>
+                <!-- Add more input fields for other user properties if needed -->
+
+                <button type="submit" class="btn btn-primary">Update User</button>
+            </form>
+        </div>
+
+        <%- include('../Partials/Footer.ejs') %>

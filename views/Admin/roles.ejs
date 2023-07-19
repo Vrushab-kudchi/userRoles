@@ -1,0 +1,50 @@
+<%- include('../Partials/Header.ejs') %>
+    <%- include('../Partials/Navbar.ejs') %>
+
+        <div class="container">
+            <h2>Users</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                        <!-- Add more table headers for other properties if needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (Array.isArray(data)) { %>
+                        <% data.forEach((userData)=> { %>
+                            <tr>
+                                <td>
+                                    <%= userData.username %>
+                                </td>
+                                <td>
+                                    <%= userData.email %>
+                                </td>
+                                <td>
+                                    <%= userData.role_id %>
+                                </td>
+                                <!-- Add more table data cells for other properties if needed -->
+                                <td>
+                                    <a href="/admin/edit/<%= userData.id %>" class="btn btn-primary btn-sm">Edit</a>
+                                </td>
+                                <td>
+                                    <form action="/admin/delete/<%= userData.id %>" method="POST">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <%- include('../Partials/Footer.ejs') %>

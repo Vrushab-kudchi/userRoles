@@ -8,46 +8,53 @@ const { v4 : uuidv4 } = require('uuid');
 
 const userLoginController = {
   register: (req, res) => {
-    // Extract data from the request body
-    const { first_name, last_name, username, email, password, repassword } = req.body;
+  // Extract data from the request body
+  const { first_name, last_name, username, email, password, repassword, role_id } = req.body;
 
-    // Check if any required fields are missing
-    if (!first_name || !last_name || !username || !email || !password || !repassword) {
-      res.status(400).send("Missing required fields"); // Send error status 400
-      return;
-    } else if (password !== repassword) {
-      res.status(422).send("Passwords do not match"); // Send error status 422
-      return;
-    } else {
-      // Encrypt the password
-      const encryptedString = cryptr.encrypt(password);
+  // Check if any required fields are missing
+  if (!first_name || !last_name || !username || !email || !password || !repassword) {
+    res.status(400).send("Missing required fields"); // Send error status 400
+    return;
+  } else if (password !== repassword) {
+    res.status(422).send("Passwords do not match"); // Send error status 422
+    return;
+  } else {
+    // Encrypt the password
+    const encryptedString = cryptr.encrypt(password);
 
-      // Insert user data into the 'registration' table
-      db.run(
-        `INSERT INTO registration (id,first_name, last_name, username, email, password)
-        VALUES (?, ?, ?, ?, ?, ?)`,
-        [uuidv4(), first_name, last_name, username, email, encryptedString],
-        function (err) {
-          if (err) {
-            if (err.errno === 19 && err.code === 'SQLITE_CONSTRAINT') {
-              // Unique constraint violation
-              if (err.message.includes('username')) {
-                res.status(409).render('error', { message: "Username already exists" }); // Render error view with error message
-              } else if (err.message.includes('email')) {
-                res.status(409).render('error', { message: "Email already exists" }); // Render error view with error message
-              } else {
-                res.status(500).render('error', { message: "Error occurred" }); // Render error view with error message
-              }
+    // Check if role_id is provided
+    let roleId = role_id;
+    if (!roleId) {
+      roleId = 'user'; // Assign the default role ID for regular users
+    }
+
+    // Insert user data into the 'registration' table
+    db.run(
+      `INSERT INTO registration (id, first_name, last_name, username, email, password, role_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [uuidv4(), first_name, last_name, username, email, encryptedString, roleId],
+      function (err) {
+        if (err) {
+          if (err.errno === 19 && err.code === 'SQLITE_CONSTRAINT') {
+            // Unique constraint violation
+            if (err.message.includes('username')) {
+              res.status(409).render('error', { message: "Username already exists" }); // Render error view with error message
+            } else if (err.message.includes('email')) {
+              res.status(409).render('error', { message: "Email already exists" }); // Render error view with error message
             } else {
               res.status(500).render('error', { message: "Error occurred" }); // Render error view with error message
             }
           } else {
-            res.redirect('/login');
+            res.status(500).render('error', { message: "Error occurred" }); // Render error view with error message
           }
+        } else {
+          res.redirect('/login');
         }
-      );
-    }
-  },
+      }
+    );
+  }
+},
+
 login: (req, res) => {
   try {
     const { username, password } = req.body;

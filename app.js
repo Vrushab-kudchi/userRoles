@@ -5,10 +5,16 @@ var logger = require('morgan');
 var ejs = require('ejs');
 require('dotenv').config()
 const userModel = require('./Model/userRegistrationModel'); //Table Schema
+const rolesModel = require('./Model/RolesModel');
+
+//middleware
+const tokenCheck = require('./authentication');
+const adminCheck = require('./adminMiddleware');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/loginRouter');
+var rolesRouter = require('./routes/roles')
 
 var app = express();
 
@@ -33,5 +39,7 @@ app.use('/adminlte', express.static(path.join(__dirname, 'node_modules/admin-lte
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
+app.use('/admin',tokenCheck,adminCheck, rolesRouter);
+
 
 module.exports = app;

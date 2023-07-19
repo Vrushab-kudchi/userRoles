@@ -13,14 +13,19 @@
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
             </ul>
-            <% if (user) { %>
-                <a class="nav-link  me-3" href="/login/edit">
-                    Profile
-                </a>
-                <a href="/logout" class="nav-link me-3">
-                    <i class="fas fa-sign-out-alt"></i>
+            <% if (user.role_id==="admin" ) { %>
+                <a class="nav-link  me-3" href="/admin/roles">
+                    Roles
                 </a>
                 <% } %>
+                    <% if (user) { %>
+                        <a class="nav-link  me-3" href="/login/edit">
+                            Profile
+                        </a>
+                        <a href="/logout" class="nav-link me-3">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                        <% } %>
         </div>
     </div>
 </nav>

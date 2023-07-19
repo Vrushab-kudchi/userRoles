@@ -8,16 +8,9 @@ db.serialize(() => {
         last_name TEXT,
         username TEXT UNIQUE,
         email TEXT UNIQUE,
-        password TEXT
-    )`), (err) => {
-        if (err)
-        {
-            console.log("Failed TO Create a Table");
-        }
-        else
-        {
-           console.log("Table Created")
-        }
-    }
+        password TEXT,
+        role_id TEXT,
+        FOREIGN KEY (role_id) REFERENCES roles(id)
+    )`)
     });
 
